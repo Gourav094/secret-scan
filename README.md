@@ -29,45 +29,52 @@ A zero-dependency Node.js CLI tool that scans your codebase for hardcoded secret
 
 ## Installation
 
-No installation needed. Just clone and run:
+### Run instantly with npx (no install needed)
 
 ```bash
-git clone <repo-url>
-cd secret-scan
+npx @gourav094/secret-scan
 ```
 
-Or use it in any project:
+### Install globally
 
 ```bash
-# Copy the secret-scan directory into your project, then:
-node path/to/secret-scan/bin/secret-scan.js
+npm install -g @gourav094/secret-scan
+secret-scan
+```
+
+### Install as a dev dependency
+
+```bash
+npm install --save-dev @gourav094/secret-scan
+npm run scan # To run in the current directory
 ```
 
 ## Usage
 
 ```bash
 # Scan current directory
-npm run scan
+npx @gourav094/secret-scan
 
 # Scan a specific directory
-node bin/secret-scan.js --dir ./src
+npx @gourav094/secret-scan --dir ./src
 
 # JSON output (for CI pipelines)
-node bin/secret-scan.js --json
+npx @gourav094/secret-scan --json
 
 # Show help
-node bin/secret-scan.js --help
+npx @gourav094/secret-scan --help
 ```
 
-> **Note:** When using `npm run scan`, pass flags after `--` so npm forwards them to the script:
-> ```bash
-> npm run scan -- --json
-> npm run scan -- --dir ./src
-> ```
-> Or call the script directly to avoid this:
-> ```bash
-> node bin/secret-scan.js --json
-> ```
+If installed globally or running from the cloned repo:
+
+```bash
+# Global install
+secret-scan --dir ./src
+
+# From cloned repo
+node bin/secret-scan.js --dir ./src
+npm run scan -- --dir ./src
+```
 
 ## Output Format
 
