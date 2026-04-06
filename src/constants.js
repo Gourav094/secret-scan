@@ -63,12 +63,11 @@ const IGNORE_FILES = new Set([
   'packages.lock.json',
 ]);
 
-// File patterns to skip — env files (should be in .gitignore), example configs
+// File patterns to skip — only placeholder/template configs, NOT real .env files
 const IGNORE_FILE_PATTERNS = [
-  /^\.env(\..*)?$/,        // .env, .env.local, .env.example, .env.production, etc.
-  /\.example$/,            // anything.example
-  /\.sample$/,             // anything.sample
-  /\.template$/,           // anything.template
+  /\.example$/,            // .env.example, config.example, etc.
+  /\.sample$/,             // .env.sample, config.sample, etc.
+  /\.template$/,           // .env.template, config.template, etc.
 ];
 
 const MAX_FILE_SIZE = 1024 * 1024; // 1 MB
