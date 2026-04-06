@@ -1,10 +1,10 @@
 {
-  "name": "secret-scan",
+  "name": "@gourav094/secret-scan",
   "version": "1.0.0",
   "description": "CLI tool to scan for hardcoded secrets, API keys, tokens, and passwords",
   "main": "src/scanner.js",
   "bin": {
-    "secret-scan": "./bin/secret-scan.js"
+    "secret-scan": "bin/secret-scan.js"
   },
   "scripts": {
     "scan": "node bin/secret-scan.js"
