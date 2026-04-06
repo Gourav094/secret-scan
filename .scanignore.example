@@ -1,0 +1,16 @@
+# .scanignore — Additional patterns to exclude from secret scanning
+# Uses the same syntax as .gitignore
+# The scanner also respects .gitignore files
+
+# Test fixtures with intentional fake secrets
+# test/fixtures/
+
+# Generated files
+# *.generated.js
+# *.min.js
+
+# Documentation
+# docs/
+
+# Specific files
+# config.example.js

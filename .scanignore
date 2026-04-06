@@ -1,0 +1,2 @@
+# Ignore the rules file which contains detection patterns
+src/rules.js
