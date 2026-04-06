@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { BINARY_EXTENSIONS, DEFAULT_IGNORE_DIRS, MAX_FILE_SIZE } = require('./constants');
+const { BINARY_EXTENSIONS, DEFAULT_IGNORE_DIRS, IGNORE_FILES, IGNORE_FILE_PATTERNS, MAX_FILE_SIZE } = require('./constants');
 const { IgnoreMatcher } = require('./ignore');
 
 /**
@@ -49,6 +49,12 @@ function walkFiles(rootDir) {
         // Skip binary files
         const ext = path.extname(entry.name).toLowerCase();
         if (BINARY_EXTENSIONS.has(ext)) continue;
+
+        // Skip known non-secret files (lock files, etc.)
+        if (IGNORE_FILES.has(entry.name)) continue;
+
+        // Skip files matching ignore patterns (.env*, .example, etc.)
+        if (IGNORE_FILE_PATTERNS.some((re) => re.test(entry.name))) continue;
 
         // Skip if matched by ignore patterns
         if (matcher.isIgnored(fullPath, false)) continue;

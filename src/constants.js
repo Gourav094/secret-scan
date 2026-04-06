@@ -48,6 +48,29 @@ const DEFAULT_IGNORE_DIRS = new Set([
   '.turbo',
 ]);
 
+const IGNORE_FILES = new Set([
+  'package-lock.json',
+  'yarn.lock',
+  'pnpm-lock.yaml',
+  'bun.lockb',
+  'composer.lock',
+  'Gemfile.lock',
+  'Pipfile.lock',
+  'poetry.lock',
+  'Cargo.lock',
+  'go.sum',
+  'flake.lock',
+  'packages.lock.json',
+]);
+
+// File patterns to skip — env files (should be in .gitignore), example configs
+const IGNORE_FILE_PATTERNS = [
+  /^\.env(\..*)?$/,        // .env, .env.local, .env.example, .env.production, etc.
+  /\.example$/,            // anything.example
+  /\.sample$/,             // anything.sample
+  /\.template$/,           // anything.template
+];
+
 const MAX_FILE_SIZE = 1024 * 1024; // 1 MB
 
 module.exports = {
@@ -55,5 +78,7 @@ module.exports = {
   SEVERITY_ORDER,
   BINARY_EXTENSIONS,
   DEFAULT_IGNORE_DIRS,
+  IGNORE_FILES,
+  IGNORE_FILE_PATTERNS,
   MAX_FILE_SIZE,
 };

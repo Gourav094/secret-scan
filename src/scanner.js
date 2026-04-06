@@ -2,8 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { SEVERITY, SEVERITY_ORDER } = require('./constants');
-const { isHighEntropy } = require('./entropy');
+const { SEVERITY_ORDER } = require('./constants');
 const { walkFiles } = require('./walker');
 const { RULES } = require('./rules');
 
@@ -13,7 +12,6 @@ const { RULES } = require('./rules');
  */
 function scanLine(line, lineNumber, filePath, relPath) {
   const findings = [];
-  const matchedRanges = []; // Track which parts of the line matched specific rules
 
   for (const rule of RULES) {
     const match = rule.regex.exec(line);
@@ -25,8 +23,6 @@ function scanLine(line, lineNumber, filePath, relPath) {
     const secret = rule.extract ? rule.extract(match) : match[0];
     const col = match.index + 1;
 
-    matchedRanges.push({ start: match.index, end: match.index + match[0].length });
-
     findings.push({
       file: relPath,
       absPath: filePath,
@@ -37,47 +33,6 @@ function scanLine(line, lineNumber, filePath, relPath) {
       ruleId: rule.id,
       secret,
     });
-  }
-
-  return findings;
-}
-
-/**
- * Check a line for high-entropy strings that weren't caught by specific rules.
- * Looks for quoted strings and assignment values.
- */
-function scanLineEntropy(line, lineNumber, filePath, relPath, existingFindings) {
-  const findings = [];
-
-  // Look for quoted strings that might be secrets
-  const stringPatterns = [
-    /['"]([A-Za-z0-9+/=_-]{20,})['"]/g,
-  ];
-
-  for (const pattern of stringPatterns) {
-    let match;
-    while ((match = pattern.exec(line)) !== null) {
-      const value = match[1];
-
-      // Skip if already caught by a specific rule on this line
-      const alreadyFound = existingFindings.some(
-        (f) => f.line === lineNumber && Math.abs(f.col - 1 - match.index) < match[0].length
-      );
-      if (alreadyFound) continue;
-
-      if (isHighEntropy(value)) {
-        findings.push({
-          file: relPath,
-          absPath: filePath,
-          line: lineNumber,
-          col: match.index + 1,
-          severity: SEVERITY.LOW,
-          description: 'High-Entropy String',
-          ruleId: 'high-entropy-string',
-          secret: value,
-        });
-      }
-    }
   }
 
   return findings;
@@ -116,10 +71,6 @@ function scanFile(filePath, rootDir) {
 
     const lineFindings = scanLine(line, lineNumber, filePath, relPath);
     fileFindings.push(...lineFindings);
-
-    // Entropy scan for strings not caught by rules
-    const entropyFindings = scanLineEntropy(line, lineNumber, filePath, relPath, lineFindings);
-    fileFindings.push(...entropyFindings);
   }
 
   return fileFindings;
